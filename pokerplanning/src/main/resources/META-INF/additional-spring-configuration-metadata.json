@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "poker.planning.deck.types",
+    "type": "java.lang.String",
+    "description": "A description for 'poker.planning.deck.types'"
+  },
+  {
+    "name": "poker.planning.default.us.status",
+    "type": "java.lang.String",
+    "description": "A description for 'poker.planning.default.us.status'"
+  }
+]}
