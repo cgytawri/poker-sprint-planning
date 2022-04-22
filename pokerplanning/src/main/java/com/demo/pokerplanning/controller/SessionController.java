@@ -23,12 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.pokerplanning.resource.Member;
 import com.demo.pokerplanning.resource.Session;
-import com.demo.pokerplanning.resource.UserStory;
-import com.demo.pokerplanning.resource.Vote;
 import com.demo.pokerplanning.service.MemberService;
 import com.demo.pokerplanning.service.SessionService;
-import com.demo.pokerplanning.service.UserStoryService;
-import com.demo.pokerplanning.service.VoteService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,19 +35,13 @@ import lombok.RequiredArgsConstructor;
  */
 @RestController
 @RequiredArgsConstructor
-public class PokerPlanningController {
+public class SessionController {
 
 	@Autowired
 	private SessionService sessionService;
 
 	@Autowired
-	private UserStoryService userStoryService;
-
-	@Autowired
 	private MemberService memberService;
-
-	@Autowired
-	private VoteService voteService;
 
 	/**
 	 * endpoint to create session
@@ -121,66 +111,6 @@ public class PokerPlanningController {
 		member = memberService.registerMemberToSession(sessionId, member);
 		return new ResponseEntity<Member>(member, HttpStatus.CREATED);
 	}
-	
-	/**
-	 * creates a user story
-	 * 
-	 * @param sessionId
-	 * @param userStory
-	 * @return user story
-	 */
-	
-	@PostMapping(value = "/sessions/{sessionId}/stories", produces = { "application/json" }, consumes = {
-			"application/json" })
-	public ResponseEntity<UserStory> createUserStory(@PathVariable("sessionId") String sessionId,
-			@Valid @RequestBody(required = true) UserStory userStory) {
-		userStory = userStoryService.createUserStory(sessionId, userStory);
-		return new ResponseEntity<UserStory>(userStory, HttpStatus.CREATED);
-	}
-	
-	/**
-	 * returns list of user stories
-	 * 
-	 * @param sessionId
-	 * @return list of stories
-	 */
-	@GetMapping(value = "/sessions/{sessionId}/stories", produces = { "application/json" })
-	public ResponseEntity<List<UserStory>> getUserStories(@PathVariable("sessionId") String sessionId) {
-		List<UserStory> listOfStories = userStoryService.getStoriesBySessionId(sessionId);
-		return new ResponseEntity<List<UserStory>>(listOfStories, HttpStatus.OK);
-	}
-	
-	/**
-	 * updates user story
-	 * 
-	 * @param sessionId
-	 * @param userStoryId
-	 * @param userStory
-	 * @return userStory
-	 */
-	@RequestMapping(value = "/sessions/{sessionId}/stories/{userStoryId}", produces = {
-			"application/json" }, consumes = { "application/json" }, method = RequestMethod.PUT)
-	public ResponseEntity<UserStory> updateUserStory(@PathVariable("sessionId") String sessionId,
-			@PathVariable("userStoryId") String userStoryId, @Valid @RequestBody(required = true) UserStory userStory) {
-		UserStory story = userStoryService.updateUserStory(sessionId, userStoryId, userStory);
-		return new ResponseEntity<UserStory>(story, HttpStatus.OK);
-	}
-
-	/**
-	 * deletes a user story
-	 * 
-	 * @param sessionId
-	 * @param userStoryId
-	 * @return userStory
-	 */
-	
-	@RequestMapping(value = "/sessions/{sessionId}/stories/{userStoryId}", produces = {
-			"application/json" }, method = RequestMethod.DELETE)
-	public ResponseEntity<UserStory> deleteUserStory(@PathVariable("sessionId") String sessionId,
-			@PathVariable("userStoryId") String userStoryId) {
-		UserStory story = userStoryService.deleteUserStory(sessionId, userStoryId);
-		return new ResponseEntity<UserStory>(story, HttpStatus.OK);
-	}
 
 	/**
 	 * Endpoint to return registered members for a session
@@ -208,38 +138,6 @@ public class PokerPlanningController {
 			@PathVariable("memberId") String memberId) {
 		Member members = memberService.deleteMembersFromSession(sessionId, memberId);
 		return new ResponseEntity<Member>(members, HttpStatus.OK);
-	}
-
-	/**
-	 * Endpoint to emit vote
-	 * 
-	 * @param sessionId
-	 * @param vote
-	 * @return vote
-	 */
-
-	@PostMapping(value = "/sessions/{sessionId}/votes", produces = { "application/json" }, consumes = {
-			"application/json" })
-	public ResponseEntity<Vote> emitVote(@PathVariable("sessionId") String sessionId,
-			@Valid @RequestBody(required = true) Vote vote) {
-		Vote emittedVote = voteService.emitVote(sessionId, vote);
-		return new ResponseEntity<Vote>(emittedVote, HttpStatus.CREATED);
-	}
-
-	/**
-	 * Endpoint to fetch votes for a given user story
-	 * 
-	 * @param sessionId
-	 * @param storyId
-	 * @return list of votes
-	 */
-	
-	@GetMapping(value = "/sessions/{sessionId}/stories/{storyId}/votes", produces = { "application/json" })
-	ResponseEntity<List<Vote>> userStoryIdVotesGet(@PathVariable("sessionId") String sessionId,
-			@PathVariable("storyId") String storyId) {
-		sessionService.getSessionById(sessionId);
-		List<Vote> votes = voteService.getVotesByStoryId(sessionId, storyId);
-		return new ResponseEntity<List<Vote>>(votes, HttpStatus.OK);
 	}
 
 }

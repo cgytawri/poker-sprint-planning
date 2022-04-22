@@ -23,6 +23,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -42,7 +43,7 @@ import lombok.NoArgsConstructor;
  *
  */
 @Entity
-@Table(name = "userstory")
+@Table(name = "userstory",indexes = @Index(name = "idx_userstory_sid_id", columnList = "id,session_id", unique = true))
 @Builder(builderMethodName = "userstory" )
 @Data
 @NoArgsConstructor
@@ -56,7 +57,7 @@ public class UserStoryModel {
     private String storyId;
 	
 	@Size(max = 20)
-	@Column(name = "id",unique=true)
+	@Column(name = "id")
     private String id;
 
     @Size(max = 1000)

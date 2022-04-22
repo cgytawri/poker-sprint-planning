@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -27,7 +28,7 @@ import lombok.NoArgsConstructor;
  *
  */
 @Entity
-@Table(name = "member")
+@Table(name = "member",indexes = @Index(name = "idx_member_sid_name", columnList = "name,session_id", unique = true))
 @Builder(builderMethodName = "member")
 @Data
 @NoArgsConstructor
