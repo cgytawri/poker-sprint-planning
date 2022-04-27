@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +50,7 @@ public class SessionController {
 	 * @param Session
 	 * @return created session along with link/URL for created session
 	 */
-	@PostMapping(value = "/sessions", produces = { "application/json" }, consumes = { "application/json" })
+	@PostMapping(value = "/sessions", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseStatus(HttpStatus.CREATED)
 	public EntityModel<Session> createSession(@Valid @RequestBody(required = true) Session Session) {
 		Session = sessionService.createSession(Session);
@@ -65,7 +66,7 @@ public class SessionController {
 	 * @return list of sessions 
 	 */
 
-	@GetMapping(value = "/sessions", produces = { "application/json" })
+	@GetMapping(value = "/sessions", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<List<Session>> getSessions() {
 		List<Session> sessionList = sessionService.getSessions();
 		return new ResponseEntity<List<Session>>(sessionList, HttpStatus.OK);
@@ -78,7 +79,7 @@ public class SessionController {
 	 * @return session
 	 */
 	
-	@GetMapping(value = "/sessions/{sessionId}", produces = { "application/json" })
+	@GetMapping(value = "/sessions/{sessionId}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Session> getSession(@PathVariable("sessionId") String sessionId) {
 		Session Session = sessionService.getSessionById(sessionId);
 		return new ResponseEntity<Session>(Session, HttpStatus.OK);
@@ -90,7 +91,7 @@ public class SessionController {
 	 * @param sessionId
 	 * @return session
 	 */
-	@RequestMapping(value = "/sessions/{sessionId}", produces = { "application/json" }, method = RequestMethod.DELETE)
+	@RequestMapping(value = "/sessions/{sessionId}", produces = { MediaType.APPLICATION_JSON_VALUE }, method = RequestMethod.DELETE)
 	public ResponseEntity<Session> deleteSession(@PathVariable("sessionId") String sessionId) {
 		Session session = sessionService.deleteSession(sessionId);
 		return new ResponseEntity<Session>(session, HttpStatus.OK);
@@ -104,8 +105,8 @@ public class SessionController {
 	 * @return member
 	 */
 	
-	@PostMapping(value = "/sessions/{sessionId}/members", produces = { "application/json" }, consumes = {
-			"application/json" })
+	@PostMapping(value = "/sessions/{sessionId}/members", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = {
+			MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Member> registerMemberToSession(@PathVariable("sessionId") String sessionId,
 			@Valid @RequestBody(required = true) Member member) {
 		member = memberService.registerMemberToSession(sessionId, member);
@@ -119,7 +120,7 @@ public class SessionController {
 	 * @return list of members
 	 */
 	
-	@GetMapping(value = "/sessions/{sessionId}/members", produces = { "application/json" })
+	@GetMapping(value = "/sessions/{sessionId}/members", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<List<Member>> getRegisteredMembersForSession(@PathVariable("sessionId") String sessionId) {
 		List<Member> members = memberService.getMembersForSession(sessionId);
 		return ResponseEntity.ok(members);
@@ -133,7 +134,7 @@ public class SessionController {
 	 * @return
 	 */
 	@RequestMapping(value = "/sessions/{sessionId}/members/{memberId}", produces = {
-			"application/json" }, method = RequestMethod.DELETE)
+			MediaType.APPLICATION_JSON_VALUE }, method = RequestMethod.DELETE)
 	public ResponseEntity<Member> getRegisterdMember(@PathVariable("sessionId") String sessionId,
 			@PathVariable("memberId") String memberId) {
 		Member members = memberService.deleteMembersFromSession(sessionId, memberId);
