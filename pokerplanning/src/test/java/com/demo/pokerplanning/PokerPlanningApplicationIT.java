@@ -70,7 +70,7 @@ public class PokerPlanningApplicationIT {
 
 	private String sessionId;
 
-	private String memberId;
+	private String memberName;
 
 	private String storyId;
 
@@ -107,14 +107,14 @@ public class PokerPlanningApplicationIT {
 	@Test
 	@Order(3)
 	public void testAddMemberToSessionWithValidInputs() throws Exception {
-		Member memberInput = new Member(null, generateRandomName());
+		memberName = generateRandomName();
+		Member memberInput = new Member(null, memberName);
 		MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/sessions/" + sessionId + "/members")
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.content(this.mapper.writeValueAsString(memberInput));
 		MvcResult result = mockMvc.perform(mockRequest).andExpect(status().isCreated())
 				.andExpect(jsonPath("$", notNullValue())).andExpect(jsonPath("$.memberId", notNullValue())).andReturn();
-		Member member = mapper.readValue(result.getResponse().getContentAsString(), Member.class);
-		memberId = member.getMemberId();
+		mapper.readValue(result.getResponse().getContentAsString(), Member.class);
 	}
 
 	@Test
@@ -147,12 +147,12 @@ public class PokerPlanningApplicationIT {
 	@Order(6)
 	public void testEmitVoteWithValidInputs() throws Exception {
 		String voteValue = "5";
-		Vote vote = new Vote(memberId, storyId, voteValue);
+		Vote vote = new Vote(memberName, storyId, voteValue);
 		MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/sessions/" + sessionId + "/votes")
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.content(this.mapper.writeValueAsString(vote));
 		mockMvc.perform(mockRequest).andExpect(status().isCreated()).andExpect(jsonPath("$", notNullValue()))
-				.andExpect(jsonPath("$.userStoryId", is(storyId))).andExpect(jsonPath("$.memberId", is(memberId)))
+				.andExpect(jsonPath("$.userStoryId", is(storyId))).andExpect(jsonPath("$.memberName", is(memberName)))
 				.andExpect(jsonPath("$.value", is("*")));
 	}
 

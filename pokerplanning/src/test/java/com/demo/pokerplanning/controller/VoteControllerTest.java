@@ -54,7 +54,7 @@ public class VoteControllerTest {
 	            .andExpect(status().isCreated())
 	            .andExpect(jsonPath("$", notNullValue()))
 	            .andExpect(jsonPath("$.userStoryId", is(userStoryId)))
-	            .andExpect(jsonPath("$.memberId", is(memberId)))
+	            .andExpect(jsonPath("$.memberName", is(memberId)))
 	            .andExpect(jsonPath("$.value", is(voteValue)));
 	}
 	
@@ -78,8 +78,8 @@ public class VoteControllerTest {
 	            .andExpect(jsonPath("$", notNullValue()))
 	            .andExpect(jsonPath("$.[0].userStoryId", is(userStoryId1)))
 	            .andExpect(jsonPath("$.[1].userStoryId", is(userStoryId1)))
-	            .andExpect(jsonPath("$.[0].memberId", is(memberId1)))
-	            .andExpect(jsonPath("$.[1].memberId", is(memberId2)))
+	            .andExpect(jsonPath("$.[0].memberName", is(memberId1)))
+	            .andExpect(jsonPath("$.[1].memberName", is(memberId2)))
 	            .andExpect(jsonPath("$.[0].value", is(voteValue1)))
 	            .andExpect(jsonPath("$.[1].value", is(voteValue2)));
 	}

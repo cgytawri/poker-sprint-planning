@@ -47,13 +47,13 @@ public class VoteService {
 
 	public Vote emitVote(String idSession, Vote vote) {
 		sessionService.getSession(idSession);
-		MemberModel memberModel = memberService.getMemberBySessionId(idSession, vote.getMemberId());
+		MemberModel memberModel = memberService.getMemberBySessionId(idSession, vote.getMemberName());
 		UserStoryModel userStortModel = userStoryService.getUserStory(idSession, vote.getUserStoryId());
 		if(!UserStory.StatusEnum.VOTING.getValue().equals(userStortModel.getStatus())) {
 			LOGGER.error("Vote cannot be accepted as user story is not in VOTING status");
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,messageSource.getMessage("error.voting.not.allowed",null,Locale.ENGLISH));
 		}
-		VoteModel voteModel = voteRepository.getVoteByUserStoryIdAndMemberId(vote.getUserStoryId(),vote.getMemberId());
+		VoteModel voteModel = voteRepository.getVoteByUserStoryIdAndMemberId(vote.getUserStoryId(),memberModel.getMemberId());
 		if(ObjectUtils.isEmpty(voteModel)) {
 			voteModel = new VoteModel();
 			voteModel.setUserStory(userStortModel);
@@ -77,7 +77,7 @@ public class VoteService {
 				if(null != voteModels) {
 					for(VoteModel voteModel : voteModels) {
 						Vote vote = new Vote();
-						vote.setMemberId(voteModel.getMember().getMemberId());
+						vote.setMemberName(voteModel.getMember().getName());
 						vote.setUserStoryId(voteModel.getUserStory().getId());
 						if (UserStory.StatusEnum.VOTED.getValue().equals(userStory.getStatus())) {
 							vote.setValue(voteModel.getVoteValue());
@@ -101,7 +101,7 @@ public class VoteService {
 			votes = new ArrayList<Vote>();
 			for (VoteModel voteModel : voteModels) {
 				Vote vote = new Vote();
-				vote.setMemberId(voteModel.getMember().getMemberId());
+				vote.setMemberName(voteModel.getMember().getName());
 				vote.setUserStoryId(voteModel.getUserStory().getId());
 				if (UserStory.StatusEnum.VOTED.getValue().equals(userStory.getStatus())) {
 					vote.setValue(voteModel.getVoteValue());

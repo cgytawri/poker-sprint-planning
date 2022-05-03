@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 public class Vote {
 	
 	@NotBlank(message = "MemberId cannot be null")
-	@JsonProperty("memberId")
-	private String memberId;
+	@JsonProperty("memberName")
+	private String memberName;
 	
 	@NotBlank(message = "userStoryId cannot be null")
 	@JsonProperty("userStoryId")

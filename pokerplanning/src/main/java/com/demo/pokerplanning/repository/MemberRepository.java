@@ -13,9 +13,9 @@ import com.demo.pokerplanning.model.MemberModel;
  */
 public interface MemberRepository extends JpaRepository<MemberModel, String> {
 	
-	@Query("FROM MemberModel u WHERE u.session.sessionId = :session_id and u.memberId = :member_id")
-	MemberModel getMembersBySessionId(
-	  @Param("session_id") String sessionId, @Param("member_id") String memberId);
+	@Query("FROM MemberModel u WHERE u.session.sessionId = :session_id and u.name = :name")
+	MemberModel getMemberBySessionId(
+	  @Param("session_id") String sessionId, @Param("name") String name);
 
 
 }

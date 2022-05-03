@@ -66,7 +66,7 @@ public class MemberService {
 	}
 
 	protected MemberModel getMemberBySessionId(String idSession, String idMember) {
-		MemberModel member =  memberRepository.getMembersBySessionId(idSession, idMember);
+		MemberModel member =  memberRepository.getMemberBySessionId(idSession, idMember);
 		if(ObjectUtils.isEmpty(member)) {
 			String errorMessage = messageSource.getMessage("error.member.not.found", new Object[] {idMember},Locale.ENGLISH);
 			LOGGER.error(errorMessage);
