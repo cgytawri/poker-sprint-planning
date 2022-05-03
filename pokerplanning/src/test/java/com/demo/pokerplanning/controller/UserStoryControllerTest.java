@@ -7,12 +7,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -34,6 +36,9 @@ public class UserStoryControllerTest {
 	@MockBean
 	private UserStoryService userStoryService;
 	
+	@MockBean
+	Tracer tracer;
+	
 	@Test
 	public void createUserStory_success() throws Exception {
 		String sessionId = "78875";
@@ -52,9 +57,9 @@ public class UserStoryControllerTest {
 	
 	@Test
 	public void getUserStories_success() throws Exception {
-		String sessionId = "78875";
-		String userStoryId1 = "userStory1";
-		String userStoryId2 = "userStory2";
+		String sessionId = UUID.randomUUID().toString();
+		String userStoryId1 = UUID.randomUUID().toString();
+		String userStoryId2 = UUID.randomUUID().toString();
 		UserStory userStory1 = new UserStory(userStoryId1,"User Story 1",null);
 		UserStory userStory2 = new UserStory(userStoryId2,"User Story 2",null);
 		List<UserStory> listOfStories = Arrays.asList(userStory1,userStory2);
@@ -65,14 +70,14 @@ public class UserStoryControllerTest {
 	    mockMvc.perform(mockRequest)
 	            .andExpect(status().isOk())
 	            .andExpect(jsonPath("$", notNullValue()))
-	            .andExpect(jsonPath("$.[0]userStoryId", is(userStoryId1)))
-	            .andExpect(jsonPath("$.[1]userStoryId", is(userStoryId2)));
+	            .andExpect(jsonPath("$.[0].userStoryId", is(userStoryId1)))
+	            .andExpect(jsonPath("$.[1].userStoryId", is(userStoryId2)));
 	}
 	
 	@Test
 	public void deleteUserStory_success() throws Exception {
-		String sessionId = "78875";
-		String userStoryId = "userStory1";
+		String sessionId = UUID.randomUUID().toString();
+		String userStoryId = UUID.randomUUID().toString();
 		UserStory userStory = new UserStory(userStoryId,"User Story 1",null);
 	    Mockito.when(userStoryService.deleteUserStory(sessionId, userStoryId)).thenReturn(userStory);	    
 	    MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.delete("/sessions/"+sessionId+"/stories/"+userStoryId)
@@ -87,9 +92,9 @@ public class UserStoryControllerTest {
 	
 	@Test
 	public void updateUserStory_success() throws Exception {
-		String sessionId = "78875";
-		String userStoryId = "userStory1";
-		UserStory userStory = new UserStory(userStoryId,"User Story 1",null);
+		String sessionId = UUID.randomUUID().toString();
+		String userStoryId = UUID.randomUUID().toString();
+		UserStory userStory = new UserStory(userStoryId,"User Story 1",UserStory.StatusEnum.VOTING);
 	    Mockito.when(userStoryService.updateUserStory(sessionId, userStoryId,userStory)).thenReturn(userStory);	    
 	    MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.put("/sessions/"+sessionId+"/stories/"+userStoryId)
 	            .contentType(MediaType.APPLICATION_JSON)

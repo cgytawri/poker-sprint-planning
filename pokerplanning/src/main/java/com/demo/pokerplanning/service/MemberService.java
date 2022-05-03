@@ -2,6 +2,7 @@ package com.demo.pokerplanning.service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -9,16 +10,17 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.pokerplanning.model.MemberModel;
 import com.demo.pokerplanning.model.SessionModel;
 import com.demo.pokerplanning.repository.MemberRepository;
 import com.demo.pokerplanning.resource.Member;
-import com.demo.pokerplanning.util.PokerPlanningUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,7 +33,7 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	
 	@Autowired
-	private PokerPlanningUtil pokerPlanningUtil;
+	private final MessageSource messageSource;
 
 	@Autowired SessionService sessionService;
 	
@@ -44,7 +46,7 @@ public class MemberService {
 		}catch(DataIntegrityViolationException e) {
 			LOGGER.error("DataIntegrityViolationException occurred while registering member to session ");
 			throw new ResponseStatusException(
-	     		           HttpStatus.BAD_REQUEST, pokerPlanningUtil.getErrorMessage("error.record.already.exists"));			
+	     		           HttpStatus.BAD_REQUEST, messageSource.getMessage("error.record.already.exists",null,Locale.ENGLISH));			
 		}
 		return member;		
 	}
@@ -65,8 +67,10 @@ public class MemberService {
 
 	protected MemberModel getMemberBySessionId(String idSession, String idMember) {
 		MemberModel member =  memberRepository.getMembersBySessionId(idSession, idMember);
-		if(null == member) {
-			new ResponseStatusException(HttpStatus.NOT_FOUND,String.format(pokerPlanningUtil.getErrorMessage("error.member.not.found"), idMember));
+		if(ObjectUtils.isEmpty(member)) {
+			String errorMessage = messageSource.getMessage("error.member.not.found", new Object[] {idMember},Locale.ENGLISH);
+			LOGGER.error(errorMessage);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,errorMessage);
 		}
 		return member;
 	}

@@ -19,6 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * 
@@ -47,6 +48,7 @@ public class SessionModel {
 
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
+	@ToString.Exclude
 	private List<MemberModel> members;
 
 	public void addMember(MemberModel member) {
@@ -57,6 +59,7 @@ public class SessionModel {
 	}
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
+	@ToString.Exclude
 	private List<UserStoryModel> userStories;
 
 }

@@ -2,12 +2,15 @@ package com.demo.pokerplanning.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.pokerplanning.model.MemberModel;
@@ -17,7 +20,6 @@ import com.demo.pokerplanning.model.VoteModel;
 import com.demo.pokerplanning.repository.VoteRepository;
 import com.demo.pokerplanning.resource.UserStory;
 import com.demo.pokerplanning.resource.Vote;
-import com.demo.pokerplanning.util.PokerPlanningUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,7 +43,7 @@ public class VoteService {
 	private SessionService sessionService;
 	
 	@Autowired
-	private PokerPlanningUtil pokerPlanningUtil;
+	private final MessageSource messageSource;
 
 	public Vote emitVote(String idSession, Vote vote) {
 		sessionService.getSession(idSession);
@@ -49,10 +51,10 @@ public class VoteService {
 		UserStoryModel userStortModel = userStoryService.getUserStory(idSession, vote.getUserStoryId());
 		if(!UserStory.StatusEnum.VOTING.getValue().equals(userStortModel.getStatus())) {
 			LOGGER.error("Vote cannot be accepted as user story is not in VOTING status");
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,pokerPlanningUtil.getErrorMessage("error.voting.not.allowed"));
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,messageSource.getMessage("error.voting.not.allowed",null,Locale.ENGLISH));
 		}
 		VoteModel voteModel = voteRepository.getVoteByUserStoryIdAndMemberId(vote.getUserStoryId(),vote.getMemberId());
-		if(null == voteModel) {
+		if(ObjectUtils.isEmpty(voteModel)) {
 			voteModel = new VoteModel();
 			voteModel.setUserStory(userStortModel);
 			voteModel.setMember(memberModel);

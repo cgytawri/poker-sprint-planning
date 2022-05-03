@@ -2,6 +2,7 @@ package com.demo.pokerplanning.service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,7 +21,6 @@ import org.springframework.web.server.ResponseStatusException;
 import com.demo.pokerplanning.model.SessionModel;
 import com.demo.pokerplanning.repository.SessionRepository;
 import com.demo.pokerplanning.resource.Session;
-import com.demo.pokerplanning.util.PokerPlanningUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +36,7 @@ public class SessionService {
 	private final SessionRepository sessionRepository;
 	
 	@Autowired
-	private final PokerPlanningUtil pokerPlanningUtil;
+	private final MessageSource messageSource;
 	
 	public Session getSessionById(String sessionId) {
 		SessionModel sessionModel = getSession(sessionId);
@@ -45,7 +46,7 @@ public class SessionService {
 	public Session createSession(Session session) {
 		if (!deckTypes.contains(session.getDeckType())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					pokerPlanningUtil.getErrorMessage("error.unsupported.deck.type"));
+					messageSource.getMessage("error.unsupported.deck.type",null,Locale.ENGLISH));
 		}
 		SessionModel sessionModel = new SessionModel(null, session.getTitle(), session.getDeckType(), null, null);
 		sessionModel = sessionRepository.saveAndFlush(sessionModel);
@@ -70,14 +71,14 @@ public class SessionService {
 		}catch(EntityNotFoundException e) {
 			LOGGER.error("Session could not be deleted as it was not found");
     		throw new ResponseStatusException(
-   		           HttpStatus.NOT_FOUND, String.format(pokerPlanningUtil.getErrorMessage("error.session.not.found"), idSession), e);
+   		           HttpStatus.NOT_FOUND, messageSource.getMessage("error.session.not.found", new Object[] {idSession},Locale.ENGLISH), e) ;
      	}	
 		return session;
 	}
 	
 	protected SessionModel getSession(String idSession) {
 		Optional<SessionModel> sessionModel = sessionRepository.findById(idSession);
-		sessionModel.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,String.format(pokerPlanningUtil.getErrorMessage("error.session.not.found"), idSession)));
+		sessionModel.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, messageSource.getMessage("error.session.not.found", new Object[] {idSession},Locale.ENGLISH)));
 		return sessionModel.get();
 	}
 }

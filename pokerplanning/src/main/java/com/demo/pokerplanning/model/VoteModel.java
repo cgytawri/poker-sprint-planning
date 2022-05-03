@@ -29,6 +29,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VoteModel {
+	
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@GenericGenerator(name = "system-uuid", strategy = "uuid")
@@ -39,12 +40,6 @@ public class VoteModel {
 	@JoinColumn(name = "story_id", nullable = false)
 	private UserStoryModel userStory;
 
-	/*
-	 * @Size(max = 50)
-	 * 
-	 * @Column(name = "session_id") private String sessionId;
-	 */
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id", nullable = false)
 	private MemberModel member;
@@ -52,11 +47,5 @@ public class VoteModel {
 	@Size(max = 20)
 	@Column(name = "vote_value")
 	private String voteValue;
-
-	/*
-	 * @ManyToOne(fetch = FetchType.LAZY)
-	 * 
-	 * @JoinColumn(name="session_id") private SessionModel session;
-	 */
 
 }

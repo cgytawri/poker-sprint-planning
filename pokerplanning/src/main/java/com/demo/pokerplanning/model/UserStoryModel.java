@@ -36,6 +36,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * 
@@ -70,6 +71,7 @@ public class UserStoryModel {
     
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "session_id",nullable=false)
+    @ToString.Exclude
 	private SessionModel session;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userStory", cascade = CascadeType.ALL, orphanRemoval = true)

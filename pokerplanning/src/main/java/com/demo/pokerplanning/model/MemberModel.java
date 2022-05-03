@@ -21,6 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * 
@@ -46,6 +47,7 @@ public class MemberModel {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "session_id",nullable=false)
+	@ToString.Exclude
 	private SessionModel session;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
