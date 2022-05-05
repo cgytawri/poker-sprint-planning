@@ -25,7 +25,7 @@ public class ApplicationConfig {
 
 	
 	@Bean
-    Filter traceIdInResponseFilter(Tracer tracer) {
+    public Filter traceIdInResponseFilter(Tracer tracer) {
         return (request, response, chain) -> {
             Span currentSpan = tracer.currentSpan();
             if (currentSpan != null) {

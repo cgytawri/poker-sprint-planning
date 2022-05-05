@@ -57,6 +57,10 @@ public class SessionController {
 		EntityModel<Session> model = EntityModel.of(Session);
 		WebMvcLinkBuilder linkToSession = linkTo(methodOn(this.getClass()).getSession(Session.getSessionId()));
 		model.add(linkToSession.withSelfRel());
+//		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+//				.path("/{sessionId}")
+//				.buildAndExpand(Session.getSessionId()).toUri();
+//		System.out.println("URL : "+uri.toString());
 		return model;
 	}
 	

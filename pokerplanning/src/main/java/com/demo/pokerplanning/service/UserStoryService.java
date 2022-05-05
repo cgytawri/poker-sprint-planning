@@ -65,9 +65,7 @@ public class UserStoryService {
 			LOGGER.error("User story cannot be deleted as it is not in pending state");
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,messageSource.getMessage("error.invalid.user.story.status",null,Locale.ENGLISH));
 		}else {
-			userStory = new UserStory();
-			userStory.setDescription(model.getDescription());
-			userStory.setUserStoryId(model.getId());
+			userStory = new UserStory(model.getId(),model.getDescription(),UserStory.StatusEnum.fromValue(model.getStatus()));
 			userStoryRepository.delete(model);
 		}
 		return userStory;
@@ -77,6 +75,8 @@ public class UserStoryService {
 		UserStoryModel model = getUserStory(idSession, idUserStory);
 		if (StringUtils.isNotEmpty(userStory.getDescription())) {
 			model.setDescription(userStory.getDescription());
+		}else {
+			userStory.setDescription(model.getDescription());
 		}
 		if (null != userStory.getStatus()) {
 			model.setStatus(userStory.getStatus().getValue());
